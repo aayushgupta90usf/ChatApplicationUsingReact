@@ -9,7 +9,7 @@ constructor() {
 	this.signInSignOut = this.signInSignOut.bind(this);
 	this.signUp = this.signUp.bind(this);
 	this.myCallBack = this.myCallBack.bind(this);
-	this.callBackForGoogleSignIn = this.callBackForGoogleSignIn.bind(this);
+	this.callBackForSignIn = this.callBackForSignIn.bind(this);
 	this.state = {
 		popupVisibility : false,
 		buttonName: "",
@@ -48,7 +48,7 @@ myCallBack(visibility) {
 	})
 }
 
-callBackForGoogleSignIn(visibility,authenticated) {
+callBackForSignIn(visibility,authenticated) {
 		console.log("googelSignIn");
 //		this.props.authenticated = authenticated;
 		this.props.callBackAuthenticated(authenticated);
@@ -90,7 +90,7 @@ render() {
 				<button style={{width:"auto"}} id="sign-in"
 							className="right" onClick={this.signInSignOut}>{this.props.authenticated ? 'SignOut' : 'SignIn'}</button>
 				<h2><b>Chat Application</b></h2>
-				{this.props.authenticated ? null : this.state.popupVisibility ? <Login viewId = {this.state.buttonName} popupVisibility = {this.state.popupVisibility} callbackFromParent={this.myCallBack} callBackForGoogleSignIn = {this.callBackForGoogleSignIn}/> : null}
+				{this.props.authenticated ? null : this.state.popupVisibility ? <Login viewId = {this.state.buttonName} popupVisibility = {this.state.popupVisibility} callbackFromParent={this.myCallBack} callBackForSignIn = {this.callBackForSignIn}/> : null}
 			</div>
 	
 	);

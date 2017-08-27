@@ -23,16 +23,32 @@ class login extends React.Component {
 		const email = this.emailInput.value;
 		const password = this.passwordInput.value;
 		
-		const provider = fire.auth().signInWithEmailAndPassword(email,password).then((user, error) => {
-	        if (error) {
-	        	console.log("error: "+error);
-	        } else {
-	        	this.popupVisibility = false;
-	          this.setState({ redirect: true })
-	        }
-		});
-		
-		
+		if(this.props.viewId == "SignUp") {
+			const name = this.nameInput.value;
+			const provider = fire.auth().createUserWithEmailAndPassword(email,password).then((user, error) => {
+				if (error) {
+					console.log("error: "+error);
+				} else {
+					const provider1 = fire.auth().signInWithEmailAndPassword(email,password).then((user, error) => {
+						if (error) {
+							console.log("error: "+error);
+						} else {
+							//callBackForSignIn(popUpVisibility,authenticated)
+							this.props.callBackForSignIn(false,true);
+						}
+					});
+				}
+			});
+			
+		}else{
+			const provider = fire.auth().signInWithEmailAndPassword(email,password).then((user, error) => {
+				if (error) {
+					console.log("error: "+error);
+				} else {
+					this.props.callBackForSignIn(false,true);
+				}
+			});
+		}
 	}
 	
 	signInUsingGoogle() {
@@ -41,7 +57,7 @@ class login extends React.Component {
 	        if (error) {
 	        	console.log("error: "+error);
 	        } else {
-	        	this.props.callBackForGoogleSignIn(false,true);
+	        	this.props.callBackForSignIn(false,true);
 //	        	this.popupVisibility = false;
 //	          this.setState({ authenticated: true })
 	      }
@@ -89,9 +105,9 @@ render() {
 			<form className="modal-content" style={{width:"30%"}} method = "post">
 				<div className="container">
 					<label  id= "namelbl" style ={{visibility: this.nameVisibility}}><b>Name</b></label> 
-					<input style ={{visibility: this.nameVisibility, backgroundColor: '#fff'}} type="text" placeholder="Enter Name" id = "name" name="name"></input>
+					<input style ={{visibility: this.nameVisibility, backgroundColor: '#fff'}} type="text" placeholder="Enter Name" ref={(input) => { this.nameInput = input }} id = "name" name="name"></input>
 					<label><b>Email</b></label> 
-					<input style={{backgroundColor: "#fff"}} type="text" placeholder="Enter Email" ref={(input) => { this.emailInput = input }} id = "email" name="email"></input>
+					<input style={{backgroundColor: "#fff"}} type="email" placeholder="Enter Email" ref={(input) => { this.emailInput = input }} id = "email" name="email"></input>
 					<label><b>Password</b></label> 
 					<input type="password" placeholder="Enter Password" id = "password" ref={(input) => { this.passwordInput = input }} name="psw"></input>
 					<span className="name_help" id="pop_help"></span>
