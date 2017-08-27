@@ -25,7 +25,7 @@ class ChatApp extends React.Component {
 		}
 		
 		// method called by system where we load all the existing messages. It was called as we load the page
-		componentDidMount() {
+		componentWillMount() {
 			// setting the event on value changed and will load all the messages into the component state
 			fire.database().ref('chatbox/').on('value', (msgs) => {
 				const currMessages = msgs.val();

@@ -9833,8 +9833,8 @@ var ChatApp = function (_React$Component) {
 
 
 	_createClass(ChatApp, [{
-		key: 'componentDidMount',
-		value: function componentDidMount() {
+		key: 'componentWillMount',
+		value: function componentWillMount() {
 			var _this2 = this;
 
 			// setting the event on value changed and will load all the messages into the component state
