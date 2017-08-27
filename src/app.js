@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
+import Header from './header'
+import {fire} from './firebase1'
 
 // create a react class ChatApp as a component
 class ChatApp extends React.Component {
@@ -10,10 +12,13 @@ class ChatApp extends React.Component {
 			// binding the onchange and onclick event
 			this.handleChange = this.handleChange.bind(this);
 			this.handleSubmit = this.handleSubmit.bind(this);
+			this.callBackFromHeaderAfterLogin = this.callBackFromHeaderAfterLogin.bind(this);
+
 			// maintaining the state of the component
 			this.state = {
 				message : "",
-				messages : []
+				messages : [],
+				authenticated:false
 			}
 			
 			
@@ -22,7 +27,7 @@ class ChatApp extends React.Component {
 		// method called by system where we load all the existing messages. It was called as we load the page
 		componentDidMount() {
 			// setting the event on value changed and will load all the messages into the component state
-			firebase.database().ref('chatbox/').on('value', (msgs) => {
+			fire.database().ref('chatbox/').on('value', (msgs) => {
 				const currMessages = msgs.val();
 				if(currMessages !=null) {
 					this.setState({
@@ -57,12 +62,20 @@ class ChatApp extends React.Component {
 			document.getElementById("usermsg").value = "";
 			
 		}
+		
+		callBackFromHeaderAfterLogin(authenticated) {
+			console.log("APp callback");
+			this.setState({
+				authenticated : authenticated
+			})
+		}
 	
+
+		
 	//	rendering the react component
 	render() {
-		
 		// iterating and mapping the messages state and printing them on chatbox div one by one
-		const msgs = this.state.messages.map((message) => {
+		const msgs =  this.state.authenticated ? this.state.messages.map((message) => {
 			return(
 					<div  key = {message.id}>
 						<div id = "spacing">
@@ -74,15 +87,17 @@ class ChatApp extends React.Component {
 					</div>
 
 			)
-		})
+		}) : null;
 		
 		return(
 				<div id ="chatbox-container">
+				<Header authenticated = {this.state.authenticated} callBackAuthenticated = {this.callBackFromHeaderAfterLogin} />
 					<div id = "chatbox"> 
 							{msgs}
 					</div>
 					<input id = "usermsg" type = "text" size="53" onChange = {this.handleChange} ></input>
-					<button onClick= {this.handleSubmit}> Submit </button>
+					<button style={{width:"auto"}} name="submitmsg"
+						id="submitmsg" onClick= {this.handleSubmit}> Submit </button>
 				</div>
 		
 		);
@@ -91,3 +106,4 @@ class ChatApp extends React.Component {
 
 // creating and calling the new chatapp component and render it and pass it to div with id = app in index html page to show in browser
 ReactDOM.render(<ChatApp />, document.getElementById('app'))
+export default app
